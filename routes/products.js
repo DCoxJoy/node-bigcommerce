@@ -5,8 +5,6 @@ const router = express.Router()
 const token ='rmw835hec1nturvs9784ffetp0rkr4u'
 const clientid = '3mt7gi7jswdubvsppfapvm4x0gmsf7t'
 
-
-
 const bigCommerce = new BigCommerce({
     clientId: clientid,
     accessToken: token,
@@ -16,40 +14,61 @@ const bigCommerce = new BigCommerce({
     
   });
 
- 
-
 //DSheet index
 router.post('/',(req,res) => {
-  
   let sku = req.body.sku;
     bigCommerce.get(`/products?sku=${sku}`, (req , res, next)=>{ 
       })
       .then(data => {
-         console.log(data)
+        
         //  return res.render('mydsheets/index')
-        console.log(sku)
+      
         res.json({
           status: 'success',
           data
           
         })
-        const listNames = data.map(function(data){
+
+        const listProduct = data.map(function(data){
           let productobj = {
-            name: data.name, 
-            id: data.id,
+            product_name: data.name, 
+            product_id: data.id,
+            product_sku: data.sku,
+            product_price: data.price,
+            description: data.description,
             images: data.images.url,
-            custom_fields: data.custom_fields
+            weight: data.weight,
+            width: data.width,
+            height: data.height,
+            depth: data.depth,
+            datasheet_benefits: data.custom_fields.resource 
+            
           }
-          return productobj
+
+          const product_id = data.id
+          const datasheet_benefits = data.custom_fields
+         
+
+         
+          console.log(product_id)
+          console.log(datasheet_benefits)
+
+
+          
+          console.log(productobj)
+          
+          
         })
-        console.log(listNames)
+        
       }).catch((err) =>{
           console.error(err)
       })
-   
+
+     
+      
+
+
 })
-
-
 
 // router.get('/',  (request, response) => {
 //   console.log(request.params);

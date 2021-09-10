@@ -12,11 +12,10 @@
 
 <body>
     <main>
-        <h4>{{sku}}</h4>
-        <form action="/dsheet" method="POST">
-            <input type="text" name="title">
-            <button type="submit">Add branding</button>
-        </form>
+      
+        {{#each custom_fields}}
+     {{name}}: {{value}}
+    {{/each}}
     </main>
 </body>
 

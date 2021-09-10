@@ -2,8 +2,8 @@ const express = require('express')
 const BigCommerce = require('node-bigcommerce')
 const router = express.Router()
 
-const token ='rmw835hec1nturvs9784ffetp0rkr4u'
-const clientid = '3mt7gi7jswdubvsppfapvm4x0gmsf7t'
+const token =''
+const clientid = ''
 
 
 
