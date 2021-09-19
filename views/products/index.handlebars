@@ -5,29 +5,15 @@
          <div>{{productid}}</div>
          <div>{{product_sku}}</div> 
          <div>{{product_name}}</div> 
-         <div>{{zoom_image}}</div>
-         <div>{{thumbnail_image}}</div>
-         <div>{{standard_image}}</div>
-         <div>{{tiny_image}}</div>
+         <div><img src={{zoom_image}} alt="Trulli" width="500" height="333"></div>
+         <div><img src={{thumbnail_image}} alt="Trulli" width="500" height="333"></div>
+         <div><img src={{standard_image}} alt="Trulli" width="500" height="333"></div>
+         <div><img src={{tiny_image}} alt="Trulli" width="75" height="75"></div>
          <div>{{{truncate short_description 1400}}}</div>
            
       </div> 
 
-      <div class="benefits">
-            <span class="benefits-header">Benefits</span><br>
-            <table>
-              
-            {{#each custom_fields}}
-            {{this.value}}
-            {{/each}}
-            </table>
-         </div>
-         <div class="features">
-            <span class="features-header">Features</span><br>
-            <table>
-             
-            </table>
-         </div>
+      
          <div class="tech-specs-header">
          <p>
             Technical Specifications
@@ -41,5 +27,20 @@
       <p>No Datasheet Found</p>
 
     {{/each}}
+    <div class="benefits">
+            <span class="benefits-header">Benefits</span><br>
+            <table>
+              
+            {{dsheet_benefits_name}}
+            {{dsheet_benefits_value}}
+            
+            </table>
+         </div>
+         <div class="features">
+            <span class="features-header">Features</span><br>
+            <table>
+             
+            </table>
+         </div>
     
 </div>

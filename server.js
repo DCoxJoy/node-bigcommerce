@@ -28,6 +28,7 @@ app.set('view engine', 'handlebars')
 app.set('views', 'views')
 
 
+
 const indexRoutes = require('./routes/index')
 const productsRoutes = require('./routes/products')
 
