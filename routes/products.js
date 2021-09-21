@@ -2,15 +2,17 @@ const { response } = require('express');
 const express = require('express')
 const BigCommerce = require('node-bigcommerce')
 const router = express.Router()
-var request = require("request");
+
+
+const unirest = require("unirest");
 
 
 //BigCommerce main api connection
 const bigCommerce = new BigCommerce({
     clientId: process.env.BC_CLIENTID,
     accessToken: process.env.BC_TOKEN,
-    storeHash: "4ccc5gfp0c",
-    host: `https://api.bigcommerce.com/stores/{{storeHash}}/v3`,
+    storeHash: process.env.STOREHASH,
+    host: `https://api.bigcommerce.com/{{storeHash}}/stores//v3`,
     responseType: "json"
     
   });
@@ -20,9 +22,9 @@ router.post('/',(req,res) => {
   let sku = req.body.sku;
   //using the bigCommerce object to handle creating the properties needed to fill an html template page.
     bigCommerce.get(`/products?sku=${sku}`, (req , res, next)=>{ 
-
+      console.log("bigcommerce get request started")
       })
-      .then(data => {
+      .then (data => {
 
         let productid = data.map(data => (
     
@@ -31,77 +33,84 @@ router.post('/',(req,res) => {
           
         }));
 
- 
+        let prodId_value = Object.values(...productid)
+        let productid_value = prodId_value[0]
        
-
-        let custom_fields = data.map(data => ({  custom_fields: productid.custom_fields }));
-         let product_images = data.map(data => ({  product_images: productid.images }));
-
-        
-        
-       
-        let result = data.map(data => (
-          { 
-           productid: data.id,
-           product_name: data.name,
-           product_sku: data.sku,
-           short_description: data.description,
-           upc: data.upc,
-           zoom_image: data.primary_image.zoom_url,
-           thumbnail_image: data.primary_image.thumbnail_url,
-           standard_image: data.primary_image.standard_url,
-           tiny_image: data.primary_image.tiny_url,
-           cust_fields_url: data.custom_fields.url
-           
-        }
-
-        ));
         
 
-        let image_url = `https://api.bigcommerce.com/stores/4ccc5gfp0c/v3/catalog/products/1949/images`
-        let url = `https://api.bigcommerce.com/stores/4ccc5gfp0c/v3/catalog/products/1949/custom-fields`
-        let options = {
-          method: 'GET',
-          image_url: image_url,
-          url: url,
-          headers: {
-            accept: 'application/json',
-            'content-type': 'application/json',
-            'x-auth-token': 'rmw835hec1nturvs9784ffetp0rkr4u'
+        let reqProdImages = unirest("GET", `https://api.bigcommerce.com/stores/${process.env.STOREHASH}/v3/catalog/products/${productid_value}/images`);
+
+        reqProdImages.headers({
+          "accept": "application/json",
+          "content-type": "application/json",
+          "x-auth-token": `${process.env.BC_TOKEN}`
+        });
+        reqProdImages.end(function (res) {
+          if (res.error) throw new Error(res.error);
+
+          for (let i = 0; i < 4; i++) { 
+           let product_image = res.body.data[i].url_standard;
+           console.log(product_image)
+          
           }
-        };
+
+    
+         
+        });
+
+
         
-        request(options, function (error, response, body) {
-          if (error) throw new Error(error);
+
         
-          // console.log(JSON.parse(data))
-          let data2 = JSON.parse(body)
-
-          var dsheet_benefits_name = data2.data[10].name
-          let dsheet_benefits_value = data2.data[10].value
-
-          let dsheet_features_name = data2.data[11].name
-          let dsheet_features_value = data2.data[11].value        
-          
-          // for (let i = 0; i < data.data.length; i++) { 
-          //   console.log(data.data[i]);
-          // }
-
-          
-          
-          // console.log(Object.values(JSON.parse(image_url)))
-
-        })
         
-       console.log(dsheet_benefits_name)
-        // console.log(productid)
-        console.log(...productid)
+        let reqCustFields = unirest("GET", `https://api.bigcommerce.com/stores/${process.env.STOREHASH}/v3/catalog/products/${productid_value}/custom-fields`);
+
+        reqCustFields.headers({
+            "accept": "application/json",
+            "content-type": "application/json",
+            "x-auth-token": `${process.env.BC_TOKEN}`
+          });
+
+
+          reqCustFields.end(function (res) {
+            if (res.error) throw new Error(res.error);
+
+           let custom_fields = {
+            datasheet_benefits: res.body.data[11],
+            datasheet_features: res.body.data[12]
+          };
+           console.log(custom_fields)
+           return custom_fields
+            
+          });
+
+  
+    
+          let result = data.map(data => (
+            { 
+             productid: data.id,
+             product_name: data.name,
+             product_sku: data.sku,
+             short_description: data.description,
+             upc: data.upc,
+             zoom_image: data.primary_image.zoom_url,
+             thumbnail_image: data.primary_image.thumbnail_url,
+             standard_image: data.primary_image.standard_url,
+             tiny_image: data.primary_image.tiny_url
+             
+           
+          }
+  
+          ));
+          
+          
+          
        console.log(...result)
+       
        
               res.render(`products/index`, {
                productid: productid,
-               result: result,
-               
+               result: result
               
               })
           })
@@ -116,14 +125,14 @@ router.post('/',(req,res) => {
 
 })
 
-router.get('/',  (request, response) => {
-  console.log(request.params);
-  const sku = request.params.sku;
-  console.log(sku);
+// router.get('/',  (request, response) => {
+//   console.log(request.params);
+//   const sku = request.params.sku;
+//   console.log(sku);
  
 
  
-});
+// });
 
 //Add DSheet form
 // router.get('/', (req,res) => {

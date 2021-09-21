@@ -40,7 +40,6 @@
     "supervisor": "^0.12.0"
   },
   "dependencies": {
-    "axios": "^0.21.4",
     "config": "^3.3.6",
     "cors": "^2.8.5",
     "debug": "^3.1.0",
@@ -50,6 +49,7 @@
     "express-handlebars": "^5.3.3",
     "graphql": "^15.5.2",
     "node-bigcommerce": "^4.1.0",
-    "request": "^2.88.2"
+    "request": "^2.88.2",
+    "unirest": "^0.6.0"
   }
 }

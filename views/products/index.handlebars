@@ -13,34 +13,21 @@
            
       </div> 
 
-      
-         <div class="tech-specs-header">
-         <p>
-            Technical Specifications
-            <br>
-            <span class="underline"></span>
-         </p>
-      </div>
-
 
     {{else}}
       <p>No Datasheet Found</p>
 
     {{/each}}
-    <div class="benefits">
-            <span class="benefits-header">Benefits</span><br>
-            <table>
-              
-            {{dsheet_benefits_name}}
-            {{dsheet_benefits_value}}
-            
-            </table>
-         </div>
-         <div class="features">
-            <span class="features-header">Features</span><br>
-            <table>
-             
-            </table>
-         </div>
+
+   
+       {{#each custom_fields}}
+       {{value}}
+      
+
+       {{/each}}
+  
+   
+     
+
     
-</div>
+   
