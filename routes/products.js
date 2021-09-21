@@ -25,21 +25,15 @@ router.post('/',(req,res) => {
       console.log("bigcommerce get request started")
       })
       .then (data => {
-
         let productid = data.map(data => (
-    
           { 
            productid: data.id
-          
         }));
 
         let prodId_value = Object.values(...productid)
         let productid_value = prodId_value[0]
        
-        
-
         let reqProdImages = unirest("GET", `https://api.bigcommerce.com/stores/${process.env.STOREHASH}/v3/catalog/products/${productid_value}/images`);
-
         reqProdImages.headers({
           "accept": "application/json",
           "content-type": "application/json",
@@ -53,18 +47,9 @@ router.post('/',(req,res) => {
            console.log(product_image)
           
           }
-
-    
-         
         });
-
-
-        
-
-        
         
         let reqCustFields = unirest("GET", `https://api.bigcommerce.com/stores/${process.env.STOREHASH}/v3/catalog/products/${productid_value}/custom-fields`);
-
         reqCustFields.headers({
             "accept": "application/json",
             "content-type": "application/json",
