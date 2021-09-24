@@ -3,10 +3,16 @@ const expressHbs = require('express-handlebars')
 const express = require('express')
 const path = require('path')
 const cors = require('cors')
-
-
+const mongoose = require('mongoose');
+const connectDB = require('./config/db')
 
 const app = express();
+
+//Connect DB
+connectDB()
+
+
+
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -14,14 +20,14 @@ app.use(express.json());
 //Handlebars Helpers
 const {
     truncate,
-    stripTags
+    select
 } = require('./helpers/hbs')
 
 
 app.engine('handlebars', expressHbs({
     helpers: {
     truncate: truncate,
-    stripTags: stripTags
+    select: select
 },
 defaultLayout: 'main'}))
 app.set('view engine', 'handlebars')
@@ -42,8 +48,8 @@ app.use('/',indexRoutes)
 app.use('/products',productsRoutes)
 
 
+const PORT = process.env.PORT || 4000
+
+app.listen(PORT, () => console.log(`Express Server Now Running On localhost ${PORT}`))
 
 
-
-
-app.listen(4000, () => console.log('Express GraphQL Server Now Running On localhost:4000'))

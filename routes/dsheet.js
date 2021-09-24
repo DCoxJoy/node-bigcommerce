@@ -3,24 +3,28 @@ const BigCommerce = require('node-bigcommerce')
 const router = express.Router()
 
 
+//BigCommerce main api connection
 const bigCommerce = new BigCommerce({
-    clientId: process.env.clientid,
-    accessToken: process.env.token,
-    storeHash: "4ccc5gfp0c",
-    host: `https://api.bigcommerce.com/stores/4ccc5gfp0c/v3`,
-    responseType: "json"
-    
-  });
-
+  clientId: process.env.BC_CLIENTID,
+  accessToken: process.env.BC_TOKEN,
+  storeHash: process.env.STOREHASH,
+  host: `https://api.bigcommerce.com/{{storeHash}}/stores//v3`,
+  responseType: "json"
+  
+});
 
 
 
 
 router.get('/', async (request, response) => {
 
-  bigCommerce.get('/products')
+  bigCommerce.get('/')
   .then(data => {
-    // Catch any errors, or handle the data returned
+    let sku = data.map(data => (
+      { 
+       sku: data.sku
+    }));
+    console.log(sku)
   }).catch
 
   
